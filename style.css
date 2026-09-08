@@ -1,4 +1,4 @@
-/* Обнуление и базовые стили */
+/* Обнуление */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -13,12 +13,10 @@ body {
     align-items: center;
     min-height: 100vh;
     margin: 20px;
-    /* Фон будет задан через псевдоэлемент, чтобы применить blur */
     position: relative;
-    background: #f0f2f5; /* запасной цвет */
+    background: #f0f2f5;
 }
 
-/* Псевдоэлемент для фоновой картинки с размытием */
 body::before {
     content: '';
     position: fixed;
@@ -31,16 +29,16 @@ body::before {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    filter: blur(6px);          /* степень размытия */
+    filter: blur(6px);
     -webkit-filter: blur(6px);
-    transform: scale(1.05);      /* чтобы не было белых краёв */
+    transform: scale(1.05);
 }
 
 #app {
     max-width: 800px;
     width: 100%;
     background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(2px);  /* лёгкое размытие самого контейнера */
+    backdrop-filter: blur(2px);
     border-radius: 20px;
     padding: 30px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -59,14 +57,8 @@ h1 {
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 h2 {
@@ -81,10 +73,7 @@ h3 {
     color: #2c3e50;
 }
 
-input,
-select,
-textarea,
-button {
+input, select, textarea, button {
     width: 100%;
     padding: 12px;
     margin: 8px 0;
@@ -171,8 +160,7 @@ button.secondary:hover {
     color: #2c3e50;
 }
 
-#resumePreview p,
-#resumePreview li {
+#resumePreview p, #resumePreview li {
     font-size: 0.95rem;
 }
 
@@ -183,14 +171,9 @@ button.secondary:hover {
     margin: 0 0 10px 10px;
 }
 
-/* Адаптив */
 @media (max-width: 600px) {
-    #app {
-        padding: 15px;
-    }
-    button {
-        font-size: 0.9rem;
-    }
+    #app { padding: 15px; }
+    button { font-size: 0.9rem; }
     #resumePreview img {
         float: none;
         display: block;

@@ -4,80 +4,81 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Конструктор резюме</title>
-    <!-- Подключаем CSS -->
     <link rel="stylesheet" href="style.css" />
-    <!-- Библиотека для PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <!-- Фавиконка (эмодзи) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>" />
 </head>
 <body>
     <div id="app">
         <h1>🎯 Конструктор резюме</h1>
 
-        <!-- Шаг 1: Должность и отрасль -->
+        <!-- Шаг 1: Должность, отрасль и личные данные -->
         <div id="step1" class="step">
-            <h2>Кем вы хотите работать?</h2>
-            <input type="text" id="jobTitle" placeholder="Например: Java-разработчик" />
-            <h3>Выберите вашу отрасль</h3>
+            <h2>Основная информация</h2>
+            <input type="text" id="jobTitle" placeholder="Желаемая должность (например: SMM-менеджер)" />
+            
+            <h3>Выберите отрасль</h3>
             <select id="industry">
                 <option value="it">IT / Технологии</option>
                 <option value="finance">Финансы / Банки</option>
-                <option value="marketing">Маркетинг / PR</option>
+                <option value="marketing">Маркетинг / PR / SMM</option>
                 <option value="production">Производство / Логистика</option>
                 <option value="sales">Продажи</option>
                 <option value="other">Другое</option>
             </select>
+
+            <h3>Ваши контактные данные</h3>
+            <input type="text" id="fullName" placeholder="Фамилия Имя Отчество" />
+            <input type="tel" id="phone" placeholder="Телефон (например: +7 999 123-45-67)" />
+            <input type="email" id="email" placeholder="Email" />
+
             <button onclick="goToStep2()">Далее</button>
         </div>
 
-        <!-- Шаг 2: Есть ли опыт? -->
+        <!-- Шаг 2: Опыт -->
         <div id="step2" class="step" style="display:none;">
             <h2>У вас есть опыт работы по этой специальности?</h2>
             <button onclick="setExperience(true)">Да</button>
             <button onclick="setExperience(false)">Нет</button>
         </div>
 
-        <!-- Шаг 3: Если опыта нет - доп. вопросы -->
+        <!-- Шаг 3а: Нет опыта -->
         <div id="step3" class="step" style="display:none;">
             <h2>Расскажите о своих учебных проектах, курсах или стажировках</h2>
             <textarea id="noExperienceText" placeholder="Опишите, что вы умеете, несмотря на отсутствие опыта..."></textarea>
             <button onclick="saveNoExperience()">Продолжить</button>
         </div>
 
-        <!-- Шаг 4: Загрузка фото и данных из трудовой (если опыт есть) -->
+        <!-- Шаг 3б: Есть опыт -->
         <div id="step4" class="step" style="display:none;">
             <h2>Загрузите фото (для резюме)</h2>
             <input type="file" id="photoInput" accept="image/*" />
             <br /><br />
             <h3>Введите данные из трудовой книжки или выписки с Госуслуг</h3>
+            <p><em id="experienceHint">Опишите ваши обязанности и достижения на предыдущих местах работы.</em></p>
             <textarea id="workExperienceText" placeholder="Скопируйте или надиктуйте текст..."></textarea>
             <button onclick="saveWorkData()">Далее</button>
         </div>
 
-        <!-- Шаг 5: Вопрос про SQL -->
+        <!-- Шаг 5: Умный вопрос про инструменты (SQL или другие) -->
         <div id="step5" class="step" style="display:none;">
-            <h2>Знаете ли вы SQL?</h2>
-            <button onclick="setSql('yes')">Да, уверенно</button>
-            <button onclick="setSql('basic')">Базово</button>
-            <button onclick="setSql('no')">Нет</button>
+            <h2 id="skillQuestion">Знаете ли вы SQL?</h2>
+            <div id="skillAnswers">
+                <!-- кнопки будут сгенерированы JS -->
+            </div>
         </div>
 
-        <!-- Шаг 6: Дополнительные навыки (зависит от должности) -->
+        <!-- Шаг 6: Навыки -->
         <div id="step6" class="step" style="display:none;">
             <h2>Какие навыки вы хотели бы выделить?</h2>
-            <div id="skillsContainer">
-                <!-- сюда JS добавит чекбоксы -->
-            </div>
+            <div id="skillsContainer"></div>
             <button onclick="goToStep7()">Показать резюме</button>
         </div>
 
-        <!-- Шаг 7: Генерация и просмотр резюме -->
+        <!-- Шаг 7: Резюме -->
         <div id="step7" class="step" style="display:none;">
             <h2>Ваше резюме</h2>
-            <div id="resumePreview" style="border:1px solid #ccc; padding:15px; background:#fff; max-width:800px; margin:0 auto;">
-                <!-- сюда вставится сгенерированное резюме -->
-            </div>
+            <div id="resumePreview"></div>
             <br />
             <button onclick="downloadPDF()">Скачать PDF</button>
             <button onclick="resetApp()" class="secondary">Начать заново</button>
