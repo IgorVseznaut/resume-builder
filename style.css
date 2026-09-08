@@ -1,0 +1,199 @@
+/* Обнуление и базовые стили */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 20px;
+    /* Фон будет задан через псевдоэлемент, чтобы применить blur */
+    position: relative;
+    background: #f0f2f5; /* запасной цвет */
+}
+
+/* Псевдоэлемент для фоновой картинки с размытием */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    background-image: url('background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(6px);          /* степень размытия */
+    -webkit-filter: blur(6px);
+    transform: scale(1.05);      /* чтобы не было белых краёв */
+}
+
+#app {
+    max-width: 800px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(2px);  /* лёгкое размытие самого контейнера */
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 1;
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+.step {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #34495e;
+}
+
+h3 {
+    margin: 15px 0 8px;
+    font-size: 1.1rem;
+    color: #2c3e50;
+}
+
+input,
+select,
+textarea,
+button {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+button {
+    background: #3498db;
+    color: white;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+button:hover {
+    background: #2980b9;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+button.secondary {
+    background: #ecf0f1;
+    color: #333;
+}
+
+button.secondary:hover {
+    background: #d5dbdb;
+}
+
+#skillsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+#skillsContainer label {
+    background: #ecf0f1;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+#skillsContainer label:hover {
+    background: #bdc3c7;
+}
+
+#skillsContainer input[type="checkbox"] {
+    width: auto;
+    margin-right: 6px;
+}
+
+#resumePreview {
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: left;
+    line-height: 1.6;
+}
+
+#resumePreview h3 {
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 5px;
+}
+
+#resumePreview h4 {
+    margin-top: 15px;
+    color: #2c3e50;
+}
+
+#resumePreview p,
+#resumePreview li {
+    font-size: 0.95rem;
+}
+
+#resumePreview img {
+    max-width: 120px;
+    border-radius: 50%;
+    float: right;
+    margin: 0 0 10px 10px;
+}
+
+/* Адаптив */
+@media (max-width: 600px) {
+    #app {
+        padding: 15px;
+    }
+    button {
+        font-size: 0.9rem;
+    }
+    #resumePreview img {
+        float: none;
+        display: block;
+        margin: 0 auto 10px;
+    }
+}

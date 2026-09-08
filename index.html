@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Конструктор резюме</title>
+    <!-- Подключаем CSS -->
+    <link rel="stylesheet" href="style.css" />
+    <!-- Библиотека для PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Фавиконка (эмодзи) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>" />
+</head>
+<body>
+    <div id="app">
+        <h1>🎯 Конструктор резюме</h1>
+
+        <!-- Шаг 1: Должность и отрасль -->
+        <div id="step1" class="step">
+            <h2>Кем вы хотите работать?</h2>
+            <input type="text" id="jobTitle" placeholder="Например: Java-разработчик" />
+            <h3>Выберите вашу отрасль</h3>
+            <select id="industry">
+                <option value="it">IT / Технологии</option>
+                <option value="finance">Финансы / Банки</option>
+                <option value="marketing">Маркетинг / PR</option>
+                <option value="production">Производство / Логистика</option>
+                <option value="sales">Продажи</option>
+                <option value="other">Другое</option>
+            </select>
+            <button onclick="goToStep2()">Далее</button>
+        </div>
+
+        <!-- Шаг 2: Есть ли опыт? -->
+        <div id="step2" class="step" style="display:none;">
+            <h2>У вас есть опыт работы по этой специальности?</h2>
+            <button onclick="setExperience(true)">Да</button>
+            <button onclick="setExperience(false)">Нет</button>
+        </div>
+
+        <!-- Шаг 3: Если опыта нет - доп. вопросы -->
+        <div id="step3" class="step" style="display:none;">
+            <h2>Расскажите о своих учебных проектах, курсах или стажировках</h2>
+            <textarea id="noExperienceText" placeholder="Опишите, что вы умеете, несмотря на отсутствие опыта..."></textarea>
+            <button onclick="saveNoExperience()">Продолжить</button>
+        </div>
+
+        <!-- Шаг 4: Загрузка фото и данных из трудовой (если опыт есть) -->
+        <div id="step4" class="step" style="display:none;">
+            <h2>Загрузите фото (для резюме)</h2>
+            <input type="file" id="photoInput" accept="image/*" />
+            <br /><br />
+            <h3>Введите данные из трудовой книжки или выписки с Госуслуг</h3>
+            <textarea id="workExperienceText" placeholder="Скопируйте или надиктуйте текст..."></textarea>
+            <button onclick="saveWorkData()">Далее</button>
+        </div>
+
+        <!-- Шаг 5: Вопрос про SQL -->
+        <div id="step5" class="step" style="display:none;">
+            <h2>Знаете ли вы SQL?</h2>
+            <button onclick="setSql('yes')">Да, уверенно</button>
+            <button onclick="setSql('basic')">Базово</button>
+            <button onclick="setSql('no')">Нет</button>
+        </div>
+
+        <!-- Шаг 6: Дополнительные навыки (зависит от должности) -->
+        <div id="step6" class="step" style="display:none;">
+            <h2>Какие навыки вы хотели бы выделить?</h2>
+            <div id="skillsContainer">
+                <!-- сюда JS добавит чекбоксы -->
+            </div>
+            <button onclick="goToStep7()">Показать резюме</button>
+        </div>
+
+        <!-- Шаг 7: Генерация и просмотр резюме -->
+        <div id="step7" class="step" style="display:none;">
+            <h2>Ваше резюме</h2>
+            <div id="resumePreview" style="border:1px solid #ccc; padding:15px; background:#fff; max-width:800px; margin:0 auto;">
+                <!-- сюда вставится сгенерированное резюме -->
+            </div>
+            <br />
+            <button onclick="downloadPDF()">Скачать PDF</button>
+            <button onclick="resetApp()" class="secondary">Начать заново</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
