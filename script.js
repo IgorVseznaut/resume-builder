@@ -9,37 +9,25 @@ let userData = {
     noExperienceText: '',
     workExperienceText: '',
     photoDataURL: null,
-    skillLevel: '',          // 'yes', 'basic', 'no' для SQL или других
+    skillLevel: '',          // 'yes', 'basic', 'no' или 'advanced' и т.д.
     selectedSkills: []
 };
 
-// Переход к шагу 2 (после ввода личных данных)
+// Шаг 1 → Шаг 2
 function goToStep2() {
-    const title = document.getElementById('jobTitle').value.trim();
     const name = document.getElementById('fullName').value.trim();
+    const title = document.getElementById('jobTitle').value.trim();
     const phone = document.getElementById('phone').value.trim();
     const email = document.getElementById('email').value.trim();
 
-    if (!title) {
-        alert('Пожалуйста, введите желаемую должность');
-        return;
-    }
-    if (!name) {
-        alert('Пожалуйста, введите ваше ФИО');
-        return;
-    }
-    if (!phone) {
-        alert('Пожалуйста, введите телефон');
-        return;
-    }
-    if (!email) {
-        alert('Пожалуйста, введите email');
-        return;
-    }
+    if (!name) { alert('Пожалуйста, введите ваше ФИО'); return; }
+    if (!title) { alert('Пожалуйста, введите желаемую должность'); return; }
+    if (!phone) { alert('Пожалуйста, введите телефон'); return; }
+    if (!email) { alert('Пожалуйста, введите email'); return; }
 
+    userData.fullName = name;
     userData.jobTitle = title;
     userData.industry = document.getElementById('industry').value;
-    userData.fullName = name;
     userData.phone = phone;
     userData.email = email;
 
@@ -50,44 +38,32 @@ function goToStep2() {
 function setExperience(has) {
     userData.hasExperience = has;
     if (has) {
-        // Меняем подсказку в зависимости от отрасли
+        // Подсказка в зависимости от отрасли
         const hint = document.getElementById('experienceHint');
-        const industry = userData.industry;
-        if (industry === 'it') {
-            hint.textContent = 'Опишите ваш стек технологий, проекты и достижения (желательно с цифрами).';
-        } else if (industry === 'marketing') {
-            hint.textContent = 'Расскажите о проведённых кампаниях, росте охватов, вовлечённости, бюджетах.';
-        } else if (industry === 'sales') {
-            hint.textContent = 'Укажите выполнение планов, объём продаж, количество привлечённых клиентов.';
-        } else if (industry === 'finance') {
-            hint.textContent = 'Опишите работу с отчётностью, бюджетирование, финансовый анализ.';
-        } else {
-            hint.textContent = 'Опишите ваши обязанности и достижения на предыдущих местах работы.';
-        }
+        const ind = userData.industry;
+        if (ind === 'it') hint.textContent = 'Опишите стек технологий, проекты и достижения (с цифрами).';
+        else if (ind === 'marketing') hint.textContent = 'Расскажите о кампаниях, росте охватов, вовлечённости, бюджетах.';
+        else if (ind === 'sales') hint.textContent = 'Укажите выполнение планов, объём продаж, количество клиентов.';
+        else if (ind === 'finance') hint.textContent = 'Опишите работу с отчётностью, бюджетирование, финансовый анализ.';
+        else hint.textContent = 'Опишите ваши обязанности и достижения.';
         showStep('step4');
     } else {
         showStep('step3');
     }
 }
 
-// Сохранение текста при отсутствии опыта
+// Нет опыта
 function saveNoExperience() {
     const text = document.getElementById('noExperienceText').value.trim();
-    if (!text) {
-        alert('Пожалуйста, опишите свои учебные проекты или курсы');
-        return;
-    }
+    if (!text) { alert('Опишите свои проекты или курсы'); return; }
     userData.noExperienceText = text;
     showSkillQuestion();
 }
 
-// Сохранение данных из трудовой и фото
+// Есть опыт + фото
 function saveWorkData() {
     const text = document.getElementById('workExperienceText').value.trim();
-    if (!text) {
-        alert('Пожалуйста, введите данные из трудовой книжки или выписки');
-        return;
-    }
+    if (!text) { alert('Введите данные из трудовой'); return; }
     userData.workExperienceText = text;
     const fileInput = document.getElementById('photoInput');
     if (fileInput.files && fileInput.files[0]) {
@@ -102,7 +78,7 @@ function saveWorkData() {
     }
 }
 
-// Умный вопрос про инструменты (SQL или другие)
+// ========== УМНЫЙ ВОПРОС ==========
 function showSkillQuestion() {
     const questionEl = document.getElementById('skillQuestion');
     const answersEl = document.getElementById('skillAnswers');
@@ -111,10 +87,10 @@ function showSkillQuestion() {
     const industry = userData.industry;
     const title = userData.jobTitle.toLowerCase();
 
-    // Определяем, нужен ли SQL
-    const needsSQL = (industry === 'it' || industry === 'finance' || 
-                      title.includes('аналитик') || title.includes('разработчик') || 
-                      title.includes('база данных') || title.includes('sql'));
+    // Определяем, нужно ли спрашивать SQL (только для IT, Finance и явных аналитиков/разработчиков)
+    const needsSQL = (industry === 'it' || industry === 'finance' ||
+                      title.includes('разработчик') || title.includes('аналитик') ||
+                      title.includes('sql') || title.includes('база данных'));
 
     if (needsSQL) {
         questionEl.textContent = 'Знаете ли вы SQL?';
@@ -126,37 +102,44 @@ function showSkillQuestion() {
     } else if (industry === 'marketing') {
         questionEl.textContent = 'Какими инструментами для анализа и продвижения вы владеете?';
         answersEl.innerHTML = `
-            <button onclick="setSkill('advanced')">Продвинутые (Google Analytics, SMM-планеры, таргетинг)</button>
-            <button onclick="setSkill('basic')">Базовые (Excel, соцсети, простые редакторы)</button>
-            <button onclick="setSkill('no')">Пока не владею, но готов учиться</button>
+            <button onclick="setSkill('advanced')">Продвинутые (GA, таргет, SMM-планеры)</button>
+            <button onclick="setSkill('basic')">Базовые (Excel, соцсети)</button>
+            <button onclick="setSkill('no')">Пока не владею, готов учиться</button>
         `;
     } else if (industry === 'sales') {
-        questionEl.textContent = 'Какой опыт работы с CRM-системами и техниками продаж у вас есть?';
+        questionEl.textContent = 'Какой опыт работы с CRM и техниками продаж у вас есть?';
         answersEl.innerHTML = `
-            <button onclick="setSkill('advanced')">Опыт работы с CRM, техники активных продаж</button>
+            <button onclick="setSkill('advanced')">Опыт с CRM, активные продажи</button>
             <button onclick="setSkill('basic')">Базовое понимание, готов развиваться</button>
             <button onclick="setSkill('no')">Нет опыта</button>
+        `;
+    } else if (industry === 'production') {
+        questionEl.textContent = 'Знакомы ли вы с системами управления производством?';
+        answersEl.innerHTML = `
+            <button onclick="setSkill('advanced')">Да, работал с MES/ERP</button>
+            <button onclick="setSkill('basic')">Базовые знания</button>
+            <button onclick="setSkill('no')">Нет</button>
         `;
     } else {
         questionEl.textContent = 'Какие профессиональные инструменты вы знаете?';
         answersEl.innerHTML = `
             <button onclick="setSkill('advanced')">Владею профессиональным софтом</button>
             <button onclick="setSkill('basic')">Базовые навыки</button>
-            <button onclick="setSkill('no')">Пока нет, но готов учиться</button>
+            <button onclick="setSkill('no')">Пока нет, готов учиться</button>
         `;
     }
 
     showStep('step5');
 }
 
-// Сохранить ответ на вопрос об инструментах
+// Сохранить ответ на вопрос
 function setSkill(level) {
     userData.skillLevel = level;
     generateSkills();
     showStep('step6');
 }
 
-// Генерация чекбоксов навыков (расширенные наборы)
+// Генерация навыков (расширенные наборы)
 function generateSkills() {
     const container = document.getElementById('skillsContainer');
     container.innerHTML = '';
@@ -172,14 +155,14 @@ function generateSkills() {
 
     let skills = skillsMap[userData.industry] || skillsMap.other;
 
-    // Добавляем специфические навыки в зависимости от ответа на инструменты
+    // Дополнительные навыки в зависимости от ответа на инструменты
     if (userData.skillLevel === 'advanced') {
         skills.push('Глубокое владение инструментами');
     } else if (userData.skillLevel === 'basic') {
         skills.push('Базовое владение инструментами');
     }
 
-    // Если SQL был выбран, добавляем соответствующую метку
+    // Если SQL был выбран (для IT/Finance) – добавляем специальные скиллы
     if (userData.skillLevel === 'yes' && (userData.industry === 'it' || userData.industry === 'finance')) {
         skills.push('Оптимизация SQL-запросов');
     }
@@ -231,7 +214,6 @@ function generateResume() {
         html += `<p>${userData.noExperienceText.replace(/\n/g, '<br>')}</p>`;
     }
 
-    // Отображение уровня владения инструментами (SQL или другими)
     let skillText = '';
     if (userData.skillLevel === 'yes') skillText = 'Владею SQL на продвинутом уровне';
     else if (userData.skillLevel === 'basic') skillText = 'Базовые знания';
@@ -288,9 +270,9 @@ function resetApp() {
         skillLevel: '',
         selectedSkills: []
     };
+    document.getElementById('fullName').value = '';
     document.getElementById('jobTitle').value = '';
     document.getElementById('industry').value = 'it';
-    document.getElementById('fullName').value = '';
     document.getElementById('phone').value = '';
     document.getElementById('email').value = '';
     document.getElementById('noExperienceText').value = '';

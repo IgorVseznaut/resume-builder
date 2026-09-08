@@ -12,10 +12,11 @@
     <div id="app">
         <h1>🎯 Конструктор резюме</h1>
 
-        <!-- Шаг 1: Должность, отрасль и личные данные -->
+        <!-- Шаг 1: Должность, отрасль, ФИО, контакты -->
         <div id="step1" class="step">
             <h2>Основная информация</h2>
-            <input type="text" id="jobTitle" placeholder="Желаемая должность (например: SMM-менеджер)" />
+            <input type="text" id="fullName" placeholder="Фамилия Имя Отчество" required />
+            <input type="text" id="jobTitle" placeholder="Желаемая должность (например: SMM-менеджер)" required />
             
             <h3>Выберите отрасль</h3>
             <select id="industry">
@@ -27,10 +28,9 @@
                 <option value="other">Другое</option>
             </select>
 
-            <h3>Ваши контактные данные</h3>
-            <input type="text" id="fullName" placeholder="Фамилия Имя Отчество" />
-            <input type="tel" id="phone" placeholder="Телефон (например: +7 999 123-45-67)" />
-            <input type="email" id="email" placeholder="Email" />
+            <h3>Контактные данные</h3>
+            <input type="tel" id="phone" placeholder="Телефон (например: +7 999 123-45-67)" required />
+            <input type="email" id="email" placeholder="Email" required />
 
             <button onclick="goToStep2()">Далее</button>
         </div>
@@ -60,11 +60,11 @@
             <button onclick="saveWorkData()">Далее</button>
         </div>
 
-        <!-- Шаг 5: Умный вопрос про инструменты (SQL или другие) -->
+        <!-- Шаг 5: Умный вопрос (SQL или другой) -->
         <div id="step5" class="step" style="display:none;">
-            <h2 id="skillQuestion">Знаете ли вы SQL?</h2>
+            <h2 id="skillQuestion">Вопрос</h2>
             <div id="skillAnswers">
-                <!-- кнопки будут сгенерированы JS -->
+                <!-- кнопки генерируются JS -->
             </div>
         </div>
 
